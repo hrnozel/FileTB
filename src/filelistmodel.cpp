@@ -24,7 +24,6 @@ QVariant FileListModel::data(const QModelIndex &index, int role) const {
     }
 }
 
-// C++ rollerini QML tarafındaki string isimlerle eşleştiriyoruz
 QHash<int, QByteArray> FileListModel::roleNames() const {
     QHash<int, QByteArray> roles;
     roles[FileNameRole] = "fileName";
@@ -35,7 +34,6 @@ QHash<int, QByteArray> FileListModel::roleNames() const {
 
 void FileListModel::scanDirectory(const QString &path) {
     qDebug() << path;
-    // Modele verilerin tamamen değişeceğini haber veriyoruz (View kendini yeniler)
     beginResetModel();
     m_files.clear();
 
@@ -44,14 +42,12 @@ void FileListModel::scanDirectory(const QString &path) {
 
     if(QFile::exists(locaFile)) {
 
-        // Sadece dosyaları, alt klasörlere de girerek tara (isteğe göre QDir::Dirs eklenebilir)
         QDirIterator it(locaFile, QDir::Files | QDir::NoDotAndDotDot, QDirIterator::Subdirectories);
 
         while (it.hasNext()) {
             it.next();
             QFileInfo info = it.fileInfo();
 
-            // C++11 brace initialization ile listeye ekliyoruz
             m_files.push_back({info.fileName(), info.absoluteFilePath(), info.isDir()});
         }
     } else {

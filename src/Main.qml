@@ -1,21 +1,23 @@
 import QtQuick
 import QtQuick.Controls
 import QtQuick.Dialogs
+import QtQuick.Layouts
+import QtQuick.Controls.Material
 
 Window {
     id: window
-    width: 640
-    height: 480
     visible: true
+    visibility: "Maximized"
     title: qsTr("Config Browser")
 
-    Column {
+    ColumnLayout {
         anchors.fill: parent
         spacing: 10
-        padding: 10
+        anchors.margins: 20
 
         Row {
             spacing: 10
+            Layout.preferredHeight: 60
             TextField {
                 id: pathInput
                 width: 450
@@ -25,6 +27,9 @@ Window {
                 contentItem: Text {
                     id: scanButtonText
                     text: "Open"
+                    color: "#000000"
+                    horizontalAlignment: Text.AlignHCenter
+                    verticalAlignment: Text.AlignVCenter
                 }
                 onClicked: {
                     folderDialog.open()
@@ -38,30 +43,52 @@ Window {
                     myFileModel.scanDirectory(selectedFolder)
                 }
             }
+
+            Item {
+                width: 20
+            }
+
+            ComboBox {
+                id: extensiosBox
+            }
         }
 
-        ListView {
+        Rectangle {
+            id: listWrapper
+
+            Layout.fillWidth: true
+            Layout.fillHeight: true
             width: parent.width
-            height: parent.height
-            clip: true
 
-            model: myFileModel
+            color: "transparent"
+            border.color: "#000000"
+            border.width: 2
+            radius: 8
 
-            delegate: ItemDelegate {
-                width: ListView.view.width
-                padding: 20
+            ListView {
+                width: parent.width
+                height: parent.height
+                clip: true
+                model: myFileModel
+                anchors.horizontalCenter: parent.horizontalCenter
 
-                Column {
-                    anchors.verticalCenter: parent.verticalCenter
-                    Text {
-                        text: (isDir ? "Dir " : "File ") + fileName
-                        font.bold: true
-                    }
+                delegate: ItemDelegate {
+                    width: parent.width
 
-                    Text {
-                        text: filePath
-                        font.pixelSize: 10
-                        color: "gray"
+                    Column {
+                        anchors.left: parent.left
+                        anchors.leftMargin: 20
+                        anchors.verticalCenter: parent.verticalCenter
+                        Text {
+                            text: (isDir ? "Dir " : "File ") + fileName
+                            font.bold: true
+                        }
+
+                        Text {
+                            text: filePath
+                            font.pixelSize: 10
+                            color: "gray"
+                        }
                     }
                 }
             }
